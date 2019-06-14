@@ -17,14 +17,40 @@
                     <h2 class="text-lg text-gray font-normal mb-3">Tasks</h2>
 
                     @foreach($project->tasks as $task)
-                        <div class="card">{{ $task->body }}</div>
+                        <div class="card mb-3">
+                            <form method="POST" action="{{ $task->path() }}">
+                                @method('PATCH')
+                                @csrf
+                                <div class="flex items-center">
+                                    <input name="body" value="{{ $task->body }}" type="text" class="w-full {{ $task->completed ? 'text-gray-500' : '' }}" />
+                                    <input type="checkbox" name="completed" value="1" {{ $task->completed ? 'checked' : '' }} onchange="this.form.submit()"/>
+                                </div>
+
+                            </form>
+                        </div>
+
+
                     @endforeach
+                    <div class="card mb-3">
+                        <form action="{{ $project->path() . '/tasks' }}" method="post">
+                            @csrf
+
+                            <input name="body" placeholder="Just type what you should do..." class="w-full">
+                        </form>
+                    </div>
                 </div>
 
                 <div class="mb-6">
                     <h2 class="text-lg text-gray font-normal mb-3">General Notes</h2>
-                    <div class="card w-full" style="min-height: 200px;">
-                        Lorem ipsum...
+                    <div>
+                        <form method="post" actioin="{{ $project->path() }}">
+                            @method('PATCH')
+                            @csrf
+                            <textarea name="notes" class="card w-full" style="min-height: 200px;"
+                            placeholder="Anything special that you want to make a note of?">{{ $project->notes }}</textarea>
+                            <button type="submit" class="button-blue">Save</button>
+                        </form>
+
                     </div>
                 </div>
             </div>

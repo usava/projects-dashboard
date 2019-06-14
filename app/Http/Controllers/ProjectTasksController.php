@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\Task;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -33,9 +35,12 @@ class ProjectTasksController extends Controller
      *
      * @param Project $project
      * @return Response
+     * @throws AuthorizationException
      */
     public function store(Project $project)
     {
+        $this->authorize('update', $project);
+
         request()->validate(['body' => 'required']);
 
         $project->addTask(request('body'));
@@ -68,13 +73,21 @@ class ProjectTasksController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
-     * @return Response
+     * @param Project $project
+     * @param Task $task
+     * @return void
+     * @throws AuthorizationException
      */
-    public function update(Request $request, $id)
+    public function update(Project $project, Task $task)
     {
-        //
+        $this->authorize('update', $task->project);
+
+        $task->update([
+            'body' => request('body'),
+            'completed' => request()->has('completed')
+        ]);
+
+        return redirect($project->path());
     }
 
     /**
