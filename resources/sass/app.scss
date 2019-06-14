@@ -1,8 +1,24 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+//@import '~bootstrap/scss/bootstrap';
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.button-blue{
+    @apply .bg-blue-333 .text-white rounded-lg .text-sm .py-2 .px-5;
+    box-shadow: 0 2px 7px 0 #b0eaff;
+}
+
+.a-no-underline, a-no-underline:hover{
+    text-decoration: none!important;
+}
+
+.card{
+    @apply  .bg-white .p-3 .rounded .shadow;
+}
