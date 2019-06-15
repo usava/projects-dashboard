@@ -41,4 +41,18 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Project', 'owner_id', 'id')->latest('updated_at');
     }
+
+    public function accessibleProjects()
+    {
+        /*$projectsCreated = $this->projects;
+
+        $pids = \DB::table('project_members')->where('user_id', $this->id)->pluck('project_id');
+        $projectsShareWith = Project::find($pids);
+
+        return $projectsCreated->merge($projectsShareWith);*/
+
+        return Project::where('owner_id', $this->id)->orWhereHas('members', function($query) {
+            $query->where('user_id', $this->id);
+        })->get();
+    }
 }

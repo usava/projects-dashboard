@@ -15,6 +15,7 @@ class ManageProjectTest extends TestCase
     /** @test */
     public function a_user_can_create_a_project()
     {
+        $this->withoutExceptionHandling();
         $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
@@ -22,9 +23,8 @@ class ManageProjectTest extends TestCase
         $attrs = [
             'title' => $this->faker->sentence,
             'description' => $this->faker->sentence,
-            'notes' => 'Generral notes hre.'
+            'notes' => 'Generral notes here.'
         ];
-
 
         $response = $this->post('/projects', $attrs);
         $project = Project::where($attrs)->first();
@@ -75,6 +75,18 @@ class ManageProjectTest extends TestCase
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes = ['title' => 'Changed', 'description' => 'Changed', 'notes' => 'Changed'])
+            ->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', $attributes);
+    }
+
+    /** @test */
+    public function a_user_can_update_a_general_notes()
+    {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
             ->patch($project->path(), $attributes = ['notes' => 'Changed'])
             ->assertRedirect($project->path());
 
@@ -91,4 +103,37 @@ class ManageProjectTest extends TestCase
         $this->patch($project->path())->assertStatus(403);
     }
 
+    /** @test */
+    public function a_user_can_delete_a_project()
+    {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->delete($project->path())
+            ->assertRedirect('/projects');
+
+        $this->assertDatabaseMissing('projects', $project->only('id'));
+    }
+
+    /** @test */
+    public function unauthorized_users_cannot_delete_a_project()
+    {
+        $project = factory(Project::class)->create();
+
+        $this->delete($project->path())->assertRedirect('/login');
+
+        $this->signIn();
+
+        $this->delete($project->path())->assertStatus(403);
+
+        $this->assertDatabaseHas('projects', $project->only('id'));
+    }
+
+    /** @test */
+    public function a_user_can_see_all_projects_they_have_invited_to_on_their_dashboard()
+    {
+        $project = tap(ProjectFactory::create())->invite($this->signIn());
+
+        $this->get('/projects')->assertSee($project->title);
+    }
 }

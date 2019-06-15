@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -35,5 +36,15 @@ class ProjectTest extends TestCase
         $project->addTask('Test task');
 
         $this->assertCount(1, $project->tasks);
+    }
+
+    /** @test */
+    public function project_can_invite_a_user()
+    {
+        $project = factory('App\Project')->create();
+
+        $project->invite($user = factory(User::class)->create());
+
+        $this->assertTrue( $project->members->contains($user));
     }
 }
