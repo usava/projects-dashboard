@@ -87,6 +87,7 @@ class TriggerActivityFeedTest extends TestCase
 
         $this->actingAs($project->owner)
             ->patch($project->tasks->first()->path(), ['body' => 'some body', 'completed' => true]);
+        $project->refresh();
         $this->assertCount(3, $project->activity);
 
         $this->actingAs($project->owner)

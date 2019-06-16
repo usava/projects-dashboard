@@ -3,10 +3,19 @@
 @section('content')
     <header class="flex items-center mb-3">
         <div class="flex justify-between w-full it ems-end">
-            <h2 class="text-gray text-sm font-normal">
+            <p class="text-gray text-sm font-normal">
                 <a href="/projects" class="a-no-underline">My projects</a> / <span>{{ $project->title }}</span>
-            </h2>
-            <a class="button-blue a-no-underline" href="{{$project->path()}}/edit">Edit project</a>
+            </p>
+            <div class="flex items-center">
+                @foreach($project->members as $member)
+                    <img src="{{ gravatar_url($member->email) }}" alt="{{ $member->name }}'s avatar"
+                         title="{{ $member->name }}" class="rounded-full w-8 mr-2"/>
+                @endforeach
+                <img src="{{ gravatar_url($project->owner->email) }}" alt="{{ $project->owner->name }}'s avatar"
+                     title="{{ $project->owner->name }}" class="rounded-full w-8 mr-2"/>
+
+                <a class="button-blue a-no-underline ml-6" href="{{$project->path()}}/edit">Edit project</a>
+            </div>
         </div>
     </header>
 
@@ -52,17 +61,7 @@
                             <button type="submit" class="button-blue mt-4">Save</button>
                         </form>
 
-                        @if($errors->any())
-                            <div class="field mt-6">
-
-                                @foreach($errors->all() as $error)
-                                    <li class="text-sm text-red-600">
-                                        {{$error}}
-                                    </li>
-                                @endforeach
-
-                            </div>
-                        @endif
+                        @include('errors')
 
                     </div>
                 </div>
@@ -71,6 +70,10 @@
                 @include('projects.card')
 
                 @include('projects.activity.card')
+
+                @can('manage', $project)
+                    @include('projects.invite')
+                @endcan
             </div>
         </div>
     </main>

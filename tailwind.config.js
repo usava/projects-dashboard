@@ -15,6 +15,13 @@ module.exports = {
       black: '#000',
       white: '#fff',
 
+      default: 'var(--text-default-color)',
+      accent: 'var(--text-accent-color)',
+      'accent-light': 'var(--text-accent-light-color)',
+      muted: 'var(--text-muted-color)',
+      'muted-light': 'var(--text-muted-light-color)',
+      error: 'var(--text-error-color)',
+
       gray: {
         100: '#f7fafc',
         200: '#edf2f7',
@@ -148,7 +155,13 @@ module.exports = {
       '56': '14rem',
       '64': '16rem',
     },
-    backgroundColor: theme => theme('colors'),
+    // backgroundColor: theme => theme('colors'),
+     backgroundColor:{
+        page: 'var(--page-background-color)',
+        card: 'var(--card-background-color)',
+        button: 'var(--button-background-color)',
+        header: 'var(--header-background-color)',
+     },
     backgroundPosition: {
       bottom: 'bottom',
       center: 'center',
@@ -168,6 +181,7 @@ module.exports = {
     borderColor: theme => ({
       ...theme('colors'),
       default: theme('colors.gray.300', 'currentColor'),
+        error: 'var(--text-error-color)!important',
     }),
     borderRadius: {
       none: '0',

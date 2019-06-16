@@ -36,11 +36,15 @@ class ProjectsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return Response
+     * @return array|Response
      */
     public function store(Request $request)
     {
         $project = auth()->user()->projects()->create($this->validateRequest());
+
+        if(request()->wantsJson()) {
+            return ['message' => $project->path()];
+        }
 
         return redirect($project->path());
     }
@@ -91,7 +95,7 @@ class ProjectsController extends Controller
      */
     public function destroy(Project $project)
     {
-        $this->authorize('update', $project);
+        $this->authorize('manage', $project);
 
         $project->delete();
 

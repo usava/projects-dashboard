@@ -15,27 +15,18 @@ class ManageProjectTest extends TestCase
     /** @test */
     public function a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
         $this->signIn();
-
         $this->get('/projects/create')->assertStatus(200);
 
-        $attrs = [
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->sentence,
-            'notes' => 'Generral notes here.'
-        ];
+        $attrs = factory(Project::class)->raw(['owner_id' => auth()->id()]);
 
-        $response = $this->post('/projects', $attrs);
-        $project = Project::where($attrs)->first();
-        $response->assertRedirect($project->path());
-
-        $this->assertDatabaseHas('projects', $attrs);
-
-        $this->get($project->path())
+        $this->followingRedirects()
+            ->post('/projects', $attrs)
             ->assertSee($attrs['title'])
             ->assertSee($attrs['description'])
             ->assertSee($attrs['notes']);
+
+        $this->assertDatabaseHas('projects', $attrs);
     }
 
     /** @test */
@@ -125,6 +116,21 @@ class ManageProjectTest extends TestCase
         $this->signIn();
 
         $this->delete($project->path())->assertStatus(403);
+
+        $this->assertDatabaseHas('projects', $project->only('id'));
+    }
+
+    /** @test */
+    public function not_project_owner_cannot_delete_a_project()
+    {
+        $project = ProjectFactory::create();
+
+        $user = $this->signIn();
+        $project->invite($user);
+
+        $this->actingAs($user)
+            ->delete($project->path())
+            ->assertStatus(403);
 
         $this->assertDatabaseHas('projects', $project->only('id'));
     }

@@ -4,7 +4,7 @@
     <header class="flex items-center mb-3">
         <div class="flex justify-between w-full it ems-end">
             <h2 class="text-gray text-sm font-normal">My projects</h2>
-            <a class="button-blue a-no-underline" href="/projects/create">Add project</a>
+            <button class="button a-no-underline" @click.prevent="$modal.show('new-project')">Add project</button>
         </div>
 
     </header>
@@ -17,6 +17,9 @@
         @empty
             <div>No projects yet</div>
         @endforelse
-
     </main>
+
+   <new-project-modal></new-project-modal>
+
+    <a href="#" @click.prevent="$modal.show('new-project')">Show modal</a>
 @endsection

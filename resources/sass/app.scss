@@ -1,24 +1,20 @@
-// Variables
-@import 'variables';
-
-// Bootstrap
-//@import '~bootstrap/scss/bootstrap';
-
 @tailwind base;
 
-@tailwind components;
+@import 'themes/light';
+@import 'themes/dark';
+@import 'components/button';
+@import 'components/card';
+
+body, button {
+    @apply .text-default;
+}
+
+.section {
+    @apply .px-8;
+}
+
+.border.border-error{
+    border-color: red!important;
+}
 
 @tailwind utilities;
-
-.button-blue{
-    @apply .bg-blue-333 .text-white rounded-lg .text-sm .py-2 .px-5;
-    box-shadow: 0 2px 7px 0 #b0eaff;
-}
-
-.a-no-underline, a-no-underline:hover{
-    text-decoration: none!important;
-}
-
-.card{
-    @apply  .bg-white .p-3 .rounded .shadow;
-}
