@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <header class="flex items-center mb-3">
+    <header class="flex items-center mb-3 pb-4">
         <div class="flex justify-between w-full it ems-end">
-            <h2 class="text-gray text-sm font-normal">My projects</h2>
-            <button class="button a-no-underline" @click.prevent="$modal.show('new-project')">Add project</button>
+            <h2 class="text-default text-base font-light">My projects</h2>
+            <button class="button" @click.prevent="$modal.show('new-project')">Add project</button>
         </div>
 
     </header>
@@ -20,6 +20,4 @@
     </main>
 
    <new-project-modal></new-project-modal>
-
-    <a href="#" @click.prevent="$modal.show('new-project')">Show modal</a>
 @endsection

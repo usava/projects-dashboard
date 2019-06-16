@@ -20,8 +20,8 @@
 
 <div class="field">
     <div class="control">
-        <button type="submit" class="button-blue is-link mr-2">{{ $button_text }}</button>
-        <button type="button" class="btn btn-outline-info" onclick="window.location.href='{{ $project->path() }}'">
+        <button type="submit" class="button is-link mr-2">{{ $button_text }}</button>
+        <button type="button" class="button outline" onclick="window.location.href='{{ $project->path() }}'">
             Cancel
         </button>
     </div>
