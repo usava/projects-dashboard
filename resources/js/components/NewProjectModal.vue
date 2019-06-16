@@ -9,9 +9,9 @@
                         <input id="titleInput"
                                type="text"
                                class="border border-muted-light p-2 text-xs block w-full rounded"
-                               :class="errors.title ? 'border-error' : 'border-muted-light'"
+                               :class="form.errors.title ? 'border-error' : 'border-muted-light'"
                                v-model="form.title">
-                        <span class="text-xs italic text-error" v-if="errors.title" v-text="errors.title[0]"></span>
+                        <span class="text-xs italic text-error" v-if="form.errors.title" v-text="form.errors.title[0]"></span>
                     </div>
 
                     <div class="mb-4">
@@ -21,10 +21,10 @@
                                   class="border border-muted-light p-2 text-xs block w-full rounded"
                                   rows="7"
                                   v-model="form.description"
-                                  :class="errors.title ? 'border-error' : 'border-muted-light'"
+                                  :class="form.errors.description ? 'border-error' : 'border-muted-light'"
                         ></textarea>
-                        <span class="text-xs italic text-error" v-if="errors.description"
-                              v-text="errors.description[0]"></span>
+                        <span class="text-xs italic text-error" v-if="form.errors.description"
+                              v-text="form.errors.description[0]"></span>
                     </div>
                 </div>
 
@@ -34,7 +34,8 @@
                         <input type="text"
                                class="border border-muted-light mb-4 p-2 text-xs block w-full rounded"
                                placeholder="Task 1"
-                               v-for="task in form.tasks">
+                               v-for="task in form.tasks"
+                               v-model="task.body">
                     </div>
 
                     <button type="button" class="inline-flex items-center text-xs" @click="addTask">
@@ -53,7 +54,7 @@
             </div>
 
             <footer class="flex justify-end">
-                <button class="button is-outlined" @click="$modal.hide('new-project')">Cancel</button>
+                <button type="button" class="button is-outlined" @click="$modal.hide('new-project')">Cancel</button>
                 <button class="button ml-4" @click="">Create Project</button>
             </footer>
         </form>
@@ -61,31 +62,31 @@
 </template>
 
 <script>
+    import DashboardForm from './DashboardForm';
     export default {
         data() {
             return {
-                form: {
+                form: new DashboardForm({
                     title: '',
                     description: '',
                     tasks: [
-                        {value: ''}
+                        {body: ''}
                     ]
-                },
-                errors: {}
-
+                })
             }
         },
 
         methods: {
             addTask() {
-                this.form.tasks.push({value: ''})
+                this.form.tasks.push({body: ''})
             },
             async submit() {
-                try {
-                    location = (await axios.post('/projects', this.form)).data.message;
-                } catch (error) {
-                    this.errors = error.response.data.errors;
+                if(! this.form.tasks[0].body) {
+                    delete this.form.originalData.tasks;
                 }
+
+                this.form.submit('/projects')
+                    .then(response => location = response.data.message);
             }
         },
         name: "NewProjectModal"
