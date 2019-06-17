@@ -1,7 +1,9 @@
 # projects-dashboard
 ProjectDashboard, tasks and invitations
 
-## Laravel + Vue project ![alt text][logo]
+![alt text][logo]
+
+## Laravel + Vue project 
 
 [logo]: https://github.com/usava/projects-dashboard/blob/master/public/images/pb_logo.png "Project Dashboard"
 
